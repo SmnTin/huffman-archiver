@@ -21,9 +21,9 @@ args_t parse_args(int argc, char **argv) {
     argparse::ArgumentParser parser("huffman_impl decoder");
 
     parser.add_argument("-c")
-        .help("Compression mode")
-        .default_value(false)
-        .implicit_value(true);
+            .help("Compression mode")
+            .default_value(false)
+            .implicit_value(true);
 
     parser.add_argument("-u")
             .help("Decompression mode")
@@ -56,7 +56,7 @@ args_t parse_args(int argc, char **argv) {
     return args;
 }
 
-void open_files(const args_t& args, std::ifstream &input, std::ofstream &output) {
+void open_files(const args_t &args, std::ifstream &input, std::ofstream &output) {
     input.open(args.input_filename, std::ios::binary);
     if (!input.is_open())
         throw std::invalid_argument("Input file can't be opened.");
@@ -76,14 +76,20 @@ int main(int argc, char **argv) {
 
         if (args.mode == args_t::COMPRESS) {
             auto info = huffman::compress_file(input, output);
-            std::cout << info.original_file_length << std::endl;
-            std::cout << info.compressed_file_body_length << std::endl;
-            std::cout << info.compressed_file_header_length << std::endl;
+            std::cout << "decompressed size: "
+                      << info.original_file_length << std::endl;
+            std::cout << "compressed size: "
+                      << info.compressed_file_body_length << std::endl;
+            std::cout << "additional data size: "
+                      << info.compressed_file_header_length << std::endl;
         } else {
             auto info = huffman::decompress_file(input, output);
-            std::cout << info.compressed_file_body_length << std::endl;
-            std::cout << info.original_file_length << std::endl;
-            std::cout << info.compressed_file_header_length << std::endl;
+            std::cout << "compressed size: "
+                      << info.compressed_file_body_length << std::endl;
+            std::cout << "decompressed size: "
+                      << info.original_file_length << std::endl;
+            std::cout << "additional data size: "
+                      << info.compressed_file_header_length << std::endl;
         }
 
         input.close();
