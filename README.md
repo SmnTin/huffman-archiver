@@ -93,11 +93,11 @@ This archiver never fully stores input or output files in RAM. In fact, it has p
 
 ### Pleasing cache and branch prediction
 
-We use integer numbers as buffers and bitwise operations everywhere to have a sliding window into the input and the output files with a bitwise precision. On top of these buffers we have a `bit_reader` and a `bit_writer` (see [fast_io.h](include/fast_io.h)).
+We use integer numbers as buffers and bitwise operations everywhere to have a sliding window into the input and output files with bitwise precision. On top of these buffers we have a `bit_reader` and a `bit_writer` (see [fast_io.h](include/fast_io.h)).
 
-This allows us to do really fast compression: we just build the codes for each byte and store them as `uint64_t`. We then use the bit writer to dump the codes on disk really quickly.
+This allows us to do fast compression: we just build the codes for each byte and store them as `uint64_t`. We then use the bit writer to dump the codes on disk really quickly.
 
-For decoding, we also use a clever trick. This trick is used in the gzip implementation and is explained well in [this article](https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art007). 
+For decoding, we also use a clever trick that is used in the gzip implementation and is explained well in [this article](https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art007). 
 
 Briefly, we have a nested decoding table (see [decode_table.h](include/decode_table.h)) which tells for each combination of 16 bits whether it contains some code as a prefix or it is itself a prefix of some code. If it contains some code as a prefix, we know the length of the prefix and the value of the decoded byte, and we can just cut off this prefix and continue decoding. Otherwise, we skip all 16 bits and decode this byte using nested table.
 
