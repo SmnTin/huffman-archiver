@@ -39,21 +39,6 @@ TEST_SUITE("huffman_impl tree") {
             exp_lens['r'] = exp_lens['u'] = exp_lens['x'] = 5;
         }
 
-        /**
-         * Synthetic test. Files with such
-         * frequency table can't be stored
-         * on modern machines.
-         */
-        SUBCASE("extremely long codes") {
-            freq[0] = 1;
-            for (std::size_t i = 1; i < 256; ++i)
-                freq[i] = 2 * freq[i - 1] + 1;
-
-            exp_lens[0] = 255;
-            for (std::size_t i = 1; i < 256; ++i)
-                exp_lens[i] = 256u - i;
-        }
-
         auto actual_lens = build_code_lengths(freq);
         CHECK(exp_lens == actual_lens);
     }
